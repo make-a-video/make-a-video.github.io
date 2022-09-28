@@ -1,0 +1,386 @@
+<style type="text/css">
+    body {
+        font-family: "Verdana"
+    }
+</style>
+
+
+<body>    
+<div class="n-title">
+    <p style="margin-top:1cm;"></p>
+   <center><h1>Make-A-Video: Text-to-Video Generation without Text-Video Data</h1></center>
+   <span style="font-size:24px">
+    <table align=center width=800px height=40px>
+        <tr>
+            <td align=center width=300px><center><span style="font-size:20px; text-align: center">Uriel Singer<sup>+</sup></span></center></td>
+            <td align=center width=300px><center><span style="font-size:20px; text-align: center">Adam Polyak<sup>+</sup></span></center></td>
+            <td align=center width=300px><center><span style="font-size:20px; text-align: center">Thomas Hayes<sup>+</sup></span></center></td>
+            <td align=center width=300px><center><span style="font-size:20px; text-align: center">Xi Yin<sup>+</sup></span></center></td>
+        </tr>
+    </table>
+    <table align=center width=1000px>
+        <tr>
+            <td align=center width=200px><center><span style="font-size:20px; text-align: center">Jie An</span></center></td>
+            <td align=center width=200px><center><span style="font-size:20px; text-align: center">Songyang Zhang</span></center></td>
+            <td align=center width=200px><center><span style="font-size:20px; text-align: center">Qiyuan Hu</span></center></td>
+            <td align=center width=200px><center><span style="font-size:20px; text-align: center">Harry Yang</span></center></td>
+            <td align=center width=200px><center><span style="font-size:20px; text-align: center">Oron Ashual</span></center></td>
+            <td align=center width=200px><center><span style="font-size:20px; text-align: center">Oran Gafni</span></center></td>
+        </tr>
+    </table>
+    <table align=center width=800px height=40px>
+        <tr>
+            <td align=center width=140px></td>
+            <td align=center width=250px><center><span style="font-size:20px; text-align: center">Devi Parikh<sup>+</sup></span></center></td>
+            <td align=center width=250px><center><span style="font-size:20px; text-align: center">Sonal Gupta<sup>+</sup></span></center></td>
+            <td align=center width=250px><center><span style="font-size:20px; text-align: center">Yaniv Taigman<sup>+</sup></span></center></td>
+            <td align=center width=140px></td>
+        </tr>
+    </table>
+    <p style="margin-bottom:0.5cm;"></p>
+    <table align=center width=800px height=40px>
+        <tr>
+            <td align=center width=250px><center><span style="font-size:16px; text-align: center;"><sup>+</sup>Core Contributors</span></center></td>
+        </tr>
+    </table>
+    <p style="margin-bottom:0.5cm;"></p>
+    <table align=center width=800px height=40px>
+        <tr>
+            <td align=center width=250px><center><span style="font-size:30px; text-align: center;">Abstract</span></center></td>
+        </tr>
+    </table>
+    <table align=center width=1200px height=100px>
+        <tr>
+            <td align=center width=1200px><center><span style="font-size:16px; text-align: center;">We propose Make-A-Video -- an approach for directly translating the tremendous recent progress in Text-to-Image (T2I) generation to Text-to-Video (T2V). Our intuition is simple: learn what the world looks like and how it is described from paired text-image data, and learn how the world moves from unsupervised video footage. Make-A-Video has three advantages: (1) it accelerates training of the T2V model (it does not need to learn visual and multimodal representations from scratch), (2) it does not require paired text-video data, and (3) the generated videos inherit the vastness (diversity in aesthetic, fantastical depictions, etc.) of today's image generation models. 
+                We design a simple yet effective way to build on T2I models with novel and effective spatial-temporal modules. First, we decompose the full temporal U-Net and attention tensors and approximate them in space and time. Second, we design a spatial temporal pipeline to generate high resolution and frame rate videos with a video decoder, interpolation model and two super resolution models that can enable various applications besides T2V. In all aspects, spatial and temporal resolution, faithfulness to text, and quality, Make-A-Video sets the new state-of-the-art in text-to-video generation, as determined by both qualitative and quantitative measures.</span></center></td>
+        </tr>
+    </table>
+    <p style="margin-bottom:0.5cm;"></p>
+</div>
+
+
+<d-article>
+
+    <center>
+        <table align = "center">
+        <hr>
+        <center><h1>Text-to-Video</h1></center>
+        <div class="large-4 columns">
+        </div>
+        <br>
+            <tr>
+                <td width="256" valign="middle" halign="middle" align="center">There is a table by a window with sunlight streaming through illuminating a pile of books.</td>
+                <td width="256" valign="middle" halign="middle" align="center">A blue unicorn flying over a mystical land.</td>
+                <td width="256" valign="middle" halign="middle" align="center">A dog wearing a Superhero outfit with red cape flying through the sky.</td>
+                <td width="256" valign="middle" halign="middle" align="center">Clown fish swimming through the coral reef.</td>
+                <td width="256" valign="middle" halign="middle" align="center">Robot dancing in times square.</td>
+                <td width="256" valign="middle" halign="middle" align="center">A litter of puppies running through the yard.</td>
+            </tr>
+            <tr>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/There_is_a_table_by_a_window_with_sunlight_streaming_through_illuminating_a_pile_of_books._second_upsample.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/1/A_blue_unicorn_flying_over_a_mystical_land_second_upsample__16.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/A_dog_wearing_a_Superhero_outfit_with_red_cape_flying_through_the_sky._second_upsample.2.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/1/Clown_fish_swimming_through_the_coral_reef_second_upsample__49.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/Robot_dancing_in_times_square_second_upsample.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/1/A_litter_of_puppies_running_through_the_yard_second_upsample__7.webp"></td>
+            </tr>
+            <tr>
+                <td width="256" valign="middle" halign="middle" align="center">A knight riding on a horse through the countryside.</td>
+                <td width="256" valign="middle" halign="middle" align="center">A panda playing on a swing set.</td>
+                <td width="256" valign="middle" halign="middle" align="center">A fluffy baby sloth with a knitted hat trying to figure out a laptop, close up, highly detailed, studio lighting, screen reflecting in its eyes.</td>
+                <td width="256" valign="middle" halign="middle" align="center">A teddy bear painting a portrait.</td>
+                <td width="256" valign="middle" halign="middle" align="center">A young couple walking in a heavy rain.</td>
+                <td width="256" valign="middle" halign="middle" align="center">A bear driving a car.</td>
+            </tr>
+            <tr>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/1/A_knight_riding_on_a_horse_through_the_countryside_second_upsample__12.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/1/A_panda_playing_on_a_swing_set_second_upsample__1.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/1/A_fluffy_baby_sloth_with_a_knitted_hat_trying_to_figure_out_a_laptop,_close_up,_highly_detailed,_studio_lighting,_screen_reflecting_in_its_eyes._second_upsample__5.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/1/A_teddy_bear_painting_a_portrait_second_upsample__10.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/1/A_young_couple_walking_in_a_heavy_rain._second_upsample__10.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/A_bear_driving_a_car_second_upsample.webp"></td>
+            </tr>
+            <tr>
+                <td width="256" valign="middle" halign="middle" align="center">A beautiful scenery which leads to a jumpscare.</td>
+                <td width="256" valign="middle" halign="middle" align="center">Sailboat sailing on a sunny day in a mountain lake.</td>
+                <td width="256" valign="middle" halign="middle" align="center">A musk ox grazing on beautiful wildflowers.</td>
+                <td width="256" valign="middle" halign="middle" align="center">Two kangaroos are busy cooking dinner in a kitchen.</td>
+                <td width="256" valign="middle" halign="middle" align="center">A small domesticated carnivorous mammal with soft fur, a short snout, and retractable claws.</td>
+                <td width="256" valign="middle" halign="middle" align="center">A spaceship being pulled into a blackhole.</td>
+            </tr>
+            <tr>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/A_beautiful_scenery_which_leads_to_a_jumpscare_second_upsample.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/Sailboat_sailing_on_a_sunny_day_in_a_mountain_lake,_highly_detailed._second_upsample.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/A_musk_ox_grazing_on_beautiful_wildflowers._second_upsample.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/Two_kangaroos_are_busy_cooking_dinner_in_a_kitchen_second_upsample_256.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/A_small_domesticated_carnivorous_mammal_with_soft_fur,_a_short_snout,_and_retractable_claws_second_upsample.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/A_spaceship_being_pulled_into_a_blackhole,_highly_detailed._second_upsample.webp"></td>
+            </tr>
+            <tr>
+                <td width="256" valign="middle" halign="middle" align="center">An artists brush painting on a canvas close up.</td>
+                <td width="256" valign="middle" halign="middle" align="center">An emoji of a baby panda wearing a red hat, blue gloves, green shirt, and blue pants.</td>
+                <td width="256" valign="middle" halign="middle" align="center">Cat watching tv with a remote in hand.</td>
+                <td width="256" valign="middle" halign="middle" align="center">Horse drinking water.</td>
+                <td width="256" valign="middle" halign="middle" align="center">Humans building a highway on mars.</td>
+                <td width="256" valign="middle" halign="middle" align="center">Hyper-realistic photo of an abandoned industrial site during a storm.</td>
+            </tr>
+            <tr>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/An_artists_brush_painting_on_a_canvas_close_up,_highly_detailed._second_upsample.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/An_emoji_of_a_baby_panda_wearing_a_red_hat,_blue_gloves,_green_shirt,_and_blue_pants,_highly_detailed._second_upsample.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/Cat_watching_tv_with_a_remote_in_hand,_highly_detailed._second_upsample.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/Horse_drinking_water_second_upsample.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/Humans_building_a_highway_on_mars,_highly_detailed._second_upsample.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/Hyper-realistic_photo_of_an_abandoned_industrial_site_during_a_storm_second_upsample.webp"></td>
+            </tr>
+            <tr>
+                <td width="256" valign="middle" halign="middle" align="center">A ufo hovering over aliens in a field.</td>
+                <td width="256" valign="middle" halign="middle" align="center">A golden retriever eating ice cream on a beautiful tropical beach at sunset.</td>
+                <td width="256" valign="middle" halign="middle" align="center">Monkey learning to play the piano.</td>
+                <td width="256" valign="middle" halign="middle" align="center">Photo of a cat singing in a barbershop quartet.</td>
+                <td width="256" valign="middle" halign="middle" align="center">A ballerina performs a beautiful and difficult dance on the roof of a very tall skyscraper, the city is lit up and glowing behind her.</td>
+                <td width="256" valign="middle" halign="middle" align="center">Unicorns running along a beach.</td>
+            </tr>
+            <tr>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/A_ufo_hovering_over_aliens_in_a_field,_highly_detailed._second_upsample.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/a_golden_retriever_eating_ice_cream_on_a_beautiful_tropical_beach_at_sunset,_high_resolution__22_256.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/Monkey_learning_to_play_the_piano_second_upsample.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/Photo_of_a_cat_singing_in_a_barbershop_quartet._second_upsample.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/1/A_ballerina_performs_a_beautiful_and_difficult_dance_on_the_roof_of_a_very_tall_skyscraper__the_city_is_lit_up_and_glowing_behind_her._second_upsample__11.webp"></td>
+                <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/T2V_samples/webp/2/Unicorns_running_along_a_beach,_highly_detailed._second_upsample.webp"></td>
+            </tr>
+        </table>
+    </center>
+
+
+<center>
+	<table align = "center">
+    <hr>
+	<center><h1>Video Variations </h1></center>
+	<div class="large-4 columns">
+	</div>
+	<br>
+	<br>
+        <tr>
+            <td width="256" valign="middle" halign="middle" align="center">Original Video</td>
+            <td width="1024" colspan="4" valign="middle" halign="middle" align="center">Generated Video Variations</td>
+        </tr>
+        <tr>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/video_variation/1057618021-hd_crop.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/video_variation/1057618021-hd.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/video_variation/1057618021-hd_second_upsample.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/video_variation/1057618021-hd_second_upsample copy.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/video_variation/1057618021-hd_second_upsample copy 2.webp"></td>
+        </tr>
+        <tr>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/video_variation/1085453414-hd_crop.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/video_variation/1085453414-hd.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/video_variation/1085453414-hd_second_upsample.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/video_variation/1085453414-hd_second_upsample copy.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/video_variation/1085453414-hd_second_upsample copy 2.webp"></td>
+        </tr>
+        <tr>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/video_variation/1088532697-hd_crop.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/video_variation/1088532697-hd.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/video_variation/1088532697-hd_second_upsample.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/video_variation/1088532697-hd_second_upsample copy.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/video_variation/1088532697-hd_second_upsample copy 2.webp"></td>
+        </tr>
+    </table>
+</center>
+
+
+<center>
+	<table align = "center">
+    <hr>
+	<center><h1>Long Video Generation</h1></center>
+	<div class="large-4 columns">
+	</div>
+	<br>
+	<br>
+        <tr>
+            <td width="256" valign="middle" halign="middle" align="center">a teddy bear on a skateboard in Times Square.</td>
+            <td width="256" valign="middle" halign="middle" align="center">A ballerina performs a beautiful and difficult dance on the roof of a very tall skyscraper, the city is lit up and glowing behind her.</td>
+            <td width="256" valign="middle" halign="middle" align="center">A panda playing on a swing set.</td>
+            <td width="256" valign="middle" halign="middle" align="center">A fluffy baby sloth with a knitted hat trying to figure out a laptop, close up, highly detailed, studio lighting, screen reflecting in its eyes.</td>
+            <td width="256" valign="middle" halign="middle" align="center">A teddy bear painting a portrait.</td>
+        </tr>
+        <tr>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/long_video/image2_first_upsample.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/long_video/A_ballerina_performs_a_beautiful_and_difficult_dance_on_the_roof_of_a_very_tall_skyscraper__the_city_is_lit_up_and_glowing_behind_her_first_upsample.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/long_video/A_panda_playing_on_a_swing_set_second_upsample__1_first_upsample.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/long_video/A_fluffy_baby_sloth_with_an_orange_knitted_hat_trying_to_figure_out_a_laptop,_close_up,_highly_detailed,_studio_lighting,_screen_reflecting_in_its_eye_first_upsample.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/long_video/A_teddy_bear_painting_a_portrait_second_upsample__10_first_upsample_2.webp"></td>
+        </tr>
+    </table>
+</center>
+
+
+
+
+<center>
+	<table align = "center">
+    <hr>
+	<center><h1>Image Animation </h1></center>
+	<div class="large-4 columns">
+	</div>
+	<br>
+	<br>
+        <tr>
+            <td width="256" valign="middle" halign="middle" align="center">Original Image</td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/image_animation/felipe_crop.png"></td>
+            <!-- <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/image_animation/leio_crop.png"></td> -->
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/image_animation/steve_crop.png"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/image_animation/wexor_crop.png"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/image_animation/yoga_crop.png"></td>
+        </tr>
+        <tr>
+            <td width="256" valign="middle" halign="middle" align="center">Animated Video</td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/image_animation/felipe.webp"></td>
+            <!-- <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/image_animation/leio.webp"></td> -->
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/image_animation/steve.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/image_animation/wexor.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/image_animation/yoga.webp"></td>
+        </tr>
+    </table>
+</center>
+
+
+<center>
+	<table align = "center">
+    <hr>
+	<center><h1>Image Interpolation </h1></center>
+	<div class="large-4 columns">
+	</div>
+	<br>
+	<br>
+    <tr>
+        <td width="256" valign="middle" halign="middle" align="center">First Image</td>
+        <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/image_interpolation/family_in_park_1.png"></td>
+        <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/image_interpolation/asteroids_1.png"></td>
+        <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/image_interpolation/vlcsnap_1.png"></td>
+        <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/image_interpolation/ripple_1.jpg"></td>
+    </tr>
+    <tr>
+        <td width="256" valign="middle" halign="middle" align="center">Second Image</td>
+        <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/image_interpolation/family_in_park_2.png"></td>
+        <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/image_interpolation/asteroids_2.png"></td>
+        <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/image_interpolation/vlcsnap_2.png"></td>
+        <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/image_interpolation/ripple_2.jpg"></td>
+    </tr>
+    <tr>
+        <td width="256" valign="middle" halign="middle" align="center">Interpolated Video</td>
+        <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/image_interpolation/family_in_park.webp"></td>
+        <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/image_interpolation/asteroids.webp"></td>
+        <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/image_interpolation/vlcsnap.webp"></td>
+        <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/image_interpolation/ripple.webp"></td>
+    </tr>
+    </table>
+</center>
+
+
+<center>
+	<table align = "center">
+    <hr>
+	<center><h1>T2V Generation Comparison</h1></center>
+	<div class="large-4 columns">
+	</div>
+	<br>
+        <tr>
+            <td width="256" valign="middle" halign="middle" align="center"></td>
+            <td width="256" valign="middle" halign="middle" align="center">4K Illuminated Christmas Tree at Night During Snowstorm</td>
+            <td width="256" valign="middle" halign="middle" align="center">Construction Site Activity</td>
+            <td width="256" valign="middle" halign="middle" align="center">Digital Information</td>
+            <td width="256" valign="middle" halign="middle" align="center">Dramatic ocean sunset</td>
+            <td width="256" valign="middle" halign="middle" align="center">fire</td>
+        </tr>
+        <tr>
+            <td width="256" valign="middle" halign="middle" align="center"> Video Diffusion Models</td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/vdm_webp/4K_Illuminated_Christmas_Tree_at_Night_During_Snowstorm.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/vdm_webp/Construction_Site_Activity.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/vdm_webp/Digital_Information.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/vdm_webp/Dramatic_ocean_sunset.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/vdm_webp/fire.webp"></td>
+        </tr>
+        <tr>
+            <td width="256" valign="middle" halign="middle" align="center"> CogVideo</td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/cogvideo_webp/4K_Illuminated_Christmas_Tree_at_Night_During_Snowstorm.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/cogvideo_webp/Construction_Site_Activity.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/cogvideo_webp/Digital_Information.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/cogvideo_webp/Dramatic_ocean_sunset.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/cogvideo_webp/fire.webp"></td>
+        </tr>
+        <tr>
+            <td width="256" valign="middle" halign="middle" align="center">Make-A-Video (Ours)</td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/model_comparison/ours_apng_watermarked_github_webp/4K_Illuminated_Christmas_Tree_at_Night_During_Snowstorm.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/model_comparison/ours_apng_watermarked_github_webp/Construction_Site_Activity.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/model_comparison/ours_apng_watermarked_github_webp/Digital_Information.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/model_comparison/ours_apng_watermarked_github_webp/Dramatic_ocean_sunset.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/model_comparison/ours_apng_watermarked_github_webp/fire.webp"></td>
+        </tr>
+        <tr>
+            <td width="256" valign="middle" halign="middle" align="center"></td>
+            <td width="256" valign="middle" halign="middle" align="center">Irrigation Canal in Western USA Water Sourced from the Colorado River 4K Aerial Video</td>
+            <td width="256" valign="middle" halign="middle" align="center">Mountain river</td>
+            <td width="256" valign="middle" halign="middle" align="center">Shinjuku Time Lapse</td>
+            <td width="256" valign="middle" halign="middle" align="center">snowfall in city</td>
+            <td width="256" valign="middle" halign="middle" align="center">Star Time Lapse in Japan</td>
+        </tr>
+        <tr>
+            <td width="256" valign="middle" halign="middle" align="center"> Video Diffusion Models</td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/vdm_webp/Irrigation_Canal_in_Western_USA_Water_Sourced_from_the_Colorado_River_4K_Aerial_Video.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/vdm_webp/Mountain_river.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/vdm_webp/Shinjuku_Time_Lapse.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/vdm_webp/snowfall_in_city.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/vdm_webp/Star_Time_Lapse_in_Japan.webp"></td>
+        </tr>
+        <tr>
+            <td width="256" valign="middle" halign="middle" align="center"> CogVideo</td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/cogvideo_webp/Irrigation_Canal_in_Western_USA_Water_Sourced_from_the_Colorado_River_4K_Aerial_Video.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/cogvideo_webp/Mountain_river.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/cogvideo_webp/Shinjuku_Time_Lapse.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/cogvideo_webp/snowfall_in_city.webp"></td>
+            <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/model_comparison/cogvideo_webp/Star_Time_Lapse_in_Japan.webp"></td>
+        </tr>
+        <tr>
+            <td width="256" valign="middle" halign="middle" align="center">Make-A-Video (Ours)</td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/model_comparison/ours_apng_watermarked_github_webp/Irrigation_Canal_in_Western_USA_Water_Sourced_from_the_Colorado_River_4K_Aerial_Video.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/model_comparison/ours_apng_watermarked_github_webp/Mountain_river.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/model_comparison/ours_apng_watermarked_github_webp/Shinjuku_Time_Lapse.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/model_comparison/ours_apng_watermarked_github_webp/snowfall_in_city.webp"></td>
+            <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/model_comparison/ours_apng_watermarked_github_webp/Star_Time_Lapse_in_Japan.webp"></td>
+        </tr>
+    </table>
+</center>
+
+
+
+<center>
+	<table align = "center">
+    <hr>
+	<center><h1>Image Interpolation Comparison</h1></center>
+	<div class="large-4 columns">
+	</div>
+	<br>
+	<br>
+    <tr>
+        <td width="256" valign="middle" halign="middle" align="center">FILM</td>
+        <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/interpolation_comparison/A_red_Cardinal_on_a_tree_branch_stands_out_when_the_snow_is_falling__FILM.webp"></td>
+        <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/interpolation_comparison/A_cat_and_a_dog_discuss_the_news_in_a_coffee_shop__FILM.webp"></td>
+        <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/interpolation_comparison/A_man_and_dog_waling_through_a_forest__FILM.webp"></td>
+        <td align="left" style="padding-left: 10px;"><img class="center" width="256" height="256" src="assets/interpolation_comparison/a_mother_cat_caring_for_her_newborn_kittens__FILM.webp"></td>
+    </tr>
+    <tr>
+        <td width="256" valign="middle" halign="middle" align="center">Make-A-Video (Ours)</td>
+        <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/interpolation_comparison/A_red_Cardinal_on_a_tree_branch_stands_out_when_the_snow_is_falling.webp"></td>
+        <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/interpolation_comparison/A_cat_and_a_dog_discuss_the_news_in_a_coffee_shop..webp"></td>
+        <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/interpolation_comparison/A_man_and_dog_waling_through_a_forest.webp"></td>
+        <td align="left" style="padding-left: 10px; padding-bottom: 30px;"><img class="center" width="256" height="256" src="assets/interpolation_comparison/a_mother_cat_caring_for_her_newborn_kittens.webp"></td>
+    </tr>
+    </table>
+</center>
+
+<p style="margin-bottom:2cm;"></p>
+
+</d-article>
+
+</body>
